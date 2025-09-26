@@ -19,7 +19,7 @@ import { Head, Link } from '@inertiajs/vue3';
                             IW
                         </div>
                         <div>
-                            <h1 class="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">IdeaWall</h1>
+                            <h1 class="text-xl lg:text-2xl font-bold text-gray-900">IdeaWall</h1>
                             <p class="text-xs lg:text-sm text-gray-600 dark:text-gray-400">Partageons nos idées</p>
                         </div>
                     </div>
@@ -51,7 +51,7 @@ import { Head, Link } from '@inertiajs/vue3';
 
                     <div class="flex flex-col justify-center">
                         <h1
-                            class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl dark:text-white">
+                            class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl ">
                             Partagez vos
                             <span class="bg-blue-400 bg-clip-text text-transparent">
                                 idées
@@ -59,7 +59,7 @@ import { Head, Link } from '@inertiajs/vue3';
                             sans soucis
                         </h1>
 
-                        <p class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
+                        <p class="mt-6 text-lg leading-8 text-gray-600 ">
                             IdeaWall est la meilleur solution qu'il vous faut si vous désirez partager les
                             différentes idées que vous avec et que vous aimeriez faire connaitre
                         </p>
@@ -105,11 +105,12 @@ import { Head, Link } from '@inertiajs/vue3';
                 class="">
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="text-center mb-20">
-                        <h2 class="text-4xl font-bold text-gray-900 sm:text-5xl dark:text-white mb-4">
+                        <h2 class="text-4xl font-bold text-gray-900 sm:text-5xl">
                             Tout ce dont vous avez besoin
                         </h2>
+                        <br>
                         <div class="w-24 h-1 bg-gradient-to-r from-indigo-600 to-blue-600 mx-auto mb-6"></div>
-                        <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
                             Des fonctionnalités puissantes conçues pour simplifier votre gestion de facturation et faire
                             croître
                             votre entreprise
@@ -121,17 +122,17 @@ import { Head, Link } from '@inertiajs/vue3';
                         <div
                             class="group bg-white rounded-3xl p-10 shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 ">
                             <div
-                                class="flex h-16 w-16 items-center justify-center rounded-2xl  text-blue-600 dark:from-blue-900/50 dark:to-indigo-900/50 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                                class="flex h-16 w-16 items-center justify-center rounded-2xl  text-blue-600  group-hover:scale-110 transition-transform duration-300">
                                 <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M13 10V3L4 14h7v7l9-11h-7z" />
                                 </svg>
                             </div>
                             <h3
-                                class="mt-8 text-2xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                                class="mt-8 text-2xl font-bold text-gray-900 group-hover:text-blue-600  transition-colors">
                                 Partage instantané
                             </h3>
-                            <p class="mt-4 text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
+                            <p class="mt-4 text-gray-600  text-lg leading-relaxed">
                                 Publiez vos idées en quelques secondes et inspirez la communauté sans effort.
                             </p>
                           
@@ -139,46 +140,46 @@ import { Head, Link } from '@inertiajs/vue3';
 
                         <!-- Feature 2 -->
                         <div
-                            class="group rounded-3xl bg-white p-10 shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 dark:bg-gray-800 border border-blue-100 dark:border-blue-800/30">
+                            class="group rounded-3xl bg-white p-10 shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
                             <div
-                                class="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-100 to-blue-100 text-indigo-600 dark:from-indigo-900/50 dark:to-blue-900/50 dark:text-indigo-400 group-hover:scale-110 transition-transform duration-300">
+                                class="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-100 to-blue-100 text-indigo-600 group-hover:scale-110 transition-transform duration-300">
                                 <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                                 </svg>
                             </div>
                             <h3
-                                class="mt-8 text-2xl font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                                class="mt-8 text-2xl font-bold text-gray-900  group-hover:text-indigo-600 transition-colors">
                                 Suivi collaboratif
                             </h3>
-                            <p class="mt-4 text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
+                            <p class="mt-4 text-gray-600 text-lg leading-relaxed">
                                 Suivez les réactions, commentaires et évolutions de vos idées en temps réel.
                             </p>
                             <div
-                                class="mt-6 flex items-center text-indigo-600 dark:text-indigo-400 font-semibold group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                                class="mt-6 flex items-center text-indigo-600  font-semibold group-hover:text-blue-600 transition-colors">
                             
                             </div>
                         </div>
 
                         <!-- Feature 3 -->
                         <div
-                            class="group rounded-3xl bg-white p-10 shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 dark:bg-gray-800 border border-blue-100 dark:border-blue-800/30">
+                            class="group rounded-3xl bg-white p-10 shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
                             <div
-                                class="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-600 dark:from-blue-900/50 dark:to-indigo-900/50 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                                class="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-600  group-hover:scale-110 transition-transform duration-300">
                                 <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                 </svg>
                             </div>
                             <h3
-                                class="mt-8 text-2xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                                class="mt-8 text-2xl font-bold text-gray-900  group-hover:text-blue-600 transition-colors">
                                 Sécurité & confidentialité
                             </h3>
-                            <p class="mt-4 text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
+                            <p class="mt-4 text-gray-600 text-lg leading-relaxed">
                                 Vos idées sont protégées grâce à un chiffrement avancé et une gestion privée des données.
                             </p>
                             <div
-                                class="mt-6 flex items-center text-blue-600 dark:text-blue-400 font-semibold group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                                class="mt-6 flex items-center text-blue-600 font-semibold group-hover:text-indigo-600 transition-colors">
 
                             </div>
                         </div>
@@ -191,12 +192,12 @@ import { Head, Link } from '@inertiajs/vue3';
                 <div class="absolute inset-0">
                 </div>
                 <div class="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8 relative">
-                    <h2 class="text-4xl font-bold text-gray-900 sm:text-5xl dark:text-white mb-6">
+                    <h2 class="text-4xl font-bold text-gray-900 sm:text-5xl mb-6">
                         Prêt à
                         <span class="bg-blue-500 bg-clip-text text-transparent">partager</span>
                         vos idées?
                     </h2>
-                    <p class="text-xl text-gray-600 dark:text-gray-300 mb-4 max-w-2xl mx-auto">
+                    <p class="text-xl text-gray-600  mb-4 max-w-2xl mx-auto">
                         Rejoignez les milliers d'utilisateurs qui font confiance à IdeaWall pour partager et
                         découvrir de
                         nouvelles idées chaque jour.
@@ -207,27 +208,21 @@ import { Head, Link } from '@inertiajs/vue3';
                         Commencer maintenant
                         </Link>
 
-                        <div class="flex items-center text-gray-500 text-sm">
-                            <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                            </svg>
-                            100% sécurisé et confidentiel
-                        </div>
+
                     </div>
                 </div>
             </div>
         </main>
         <footer
-            class="border-t border-gray-200 bg-gradient-to-r from-white/90 via-green-50/50 to-white/90 py-8 backdrop-blur-sm dark:border-gray-700 dark:from-gray-800/90 dark:via-green-900/20 dark:to-gray-800/90">
+            class="border-t border-gray-200 bg-gradient-to-r from-white/90 via-green-50/50 to-white/90 py-8 backdrop-blur-sm">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="text-center">
                     <div class="flex justify-center items-center mb-4">
                         <div class="w-8 h-1 bg-blue-400"></div>
-                        <p class="mx-4 text-lg font-semibold text-gray-700 dark:text-gray-300">IdeaWall</p>
+                        <p class="mx-4 text-lg font-semibold text-gray-700">IdeaWall</p>
                         <div class="w-8 h-1 bg-blue-400"></div>
                     </div>
-                    <p class="text-xs text-gray-500 dark:text-gray-500">
+                    <p class="text-xs text-gray-500">
                         © 2025 IdeaWall. Tous droits réservés.
                     </p>
                 </div>
