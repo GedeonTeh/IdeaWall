@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3'
 
-const props = defineProps<{
+defineProps<{
   isOpen: boolean
 }>()
 
@@ -43,7 +43,7 @@ function closeModal() {
     <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4">
       <!-- Conteneur -->
       <div class="w-full max-w-3xl bg-white rounded-2xl shadow-2xl border border-gray-200 max-h-[92vh] overflow-y-auto">
-        
+
         <!-- Header -->
         <div class="flex items-center justify-between p-5 bg-blue-400 rounded-t-2xl">
           <h2 class="text-xl font-bold text-white">Nouvelle Idée</h2>
@@ -56,7 +56,7 @@ function closeModal() {
 
         <!-- Formulaire -->
         <form @submit.prevent="submit" class="p-6 space-y-6">
-          
+
           <!-- Titre (pleine ligne) -->
           <div class="flex flex-col w-full">
             <label class="text-sm font-medium text-gray-700 mb-2">Titre</label>

@@ -11,8 +11,6 @@ import { register } from '@/routes';
 import { request } from '@/routes/password';
 import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
-import { home } from '@/routes';
-import { Link } from '@inertiajs/vue3';
 
 defineProps<{
     status?: string;
@@ -21,7 +19,7 @@ defineProps<{
 </script>
 
 <template>
-    <AuthBase > 
+    <AuthBase >
         <Head title="Connexion IdeaWall" />
         <div class="sm:mx-auto sm:w-full sm:max-w-md mb-8">
             <div class="flex justify-center items-center space-x-3">
@@ -114,26 +112,26 @@ defineProps<{
 <!-- <template>
     <div class="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-emerald-900 flex flex-col justify-center">
         <Head title="Connexion - FactureZen" />
-        
-        
-       
 
-     
+
+
+
+
         <div class="sm:mx-auto sm:w-full sm:max-w-md">
             <div class="bg-white dark:bg-gray-800 py-12 px-6 shadow-2xl rounded-3xl border border-green-100 dark:border-green-800/30 relative overflow-hidden">
-               
+
                 <div class="absolute -top-6 -left-6 h-32 w-32 rounded-full bg-gradient-to-r from-green-200 to-emerald-200 opacity-20 blur-2xl dark:from-green-800 dark:to-emerald-800"></div>
                 <div class="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-gradient-to-r from-emerald-200 to-green-200 opacity-20 blur-2xl dark:from-emerald-800 dark:to-green-800"></div>
-                
+
                 <div class="relative">
 
 
-              
+
 
                     <form @submit.prevent="submit" class="space-y-6">
                         <div>
                             <InputLabel for="email" value="Adresse email" class="text-gray-700 dark:text-gray-300 font-medium" />
-                            
+
                             <TextInput
                                 id="email"
                                 type="email"
@@ -143,13 +141,13 @@ defineProps<{
                                 autocomplete="username"
                                 placeholder="votre@email.com"
                             />
-                            
+
                             <InputError class="mt-2" :message="form.errors.email" />
                         </div>
 
                         <div>
                             <InputLabel for="password" value="Mot de passe" class="text-gray-700 dark:text-gray-300 font-medium" />
-                            
+
                             <TextInput
                                 id="password"
                                 type="password"
@@ -158,14 +156,14 @@ defineProps<{
                                 autocomplete="current-password"
                                 placeholder="••••••••"
                             />
-                            
+
                             <InputError class="mt-2" :message="form.errors.password" />
                         </div>
 
                         <div class="flex items-center justify-between">
                             <label class="flex items-center">
-                                <Checkbox 
-                                    name="remember" 
+                                <Checkbox
+                                    name="remember"
                                     v-model:checked="form.remember"
                                     class="rounded border-gray-300 text-emerald-600 shadow-sm focus:border-emerald-300 focus:ring focus:ring-emerald-200 focus:ring-opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:focus:border-emerald-400"
                                 />
@@ -214,7 +212,7 @@ defineProps<{
             </div>
         </div>
 
-        
+
         <div class="mt-12 text-center">
             <p class="text-sm text-gray-500 dark:text-gray-400">
                 © 2024 FactureZen. Tous droits réservés.
