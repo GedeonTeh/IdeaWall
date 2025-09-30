@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import Heading from '/home/mael/IdeaWall/resources/js/pages/Heading.vue';
+import Heading from './Heading.vue';
 import Create from './Create.vue';
 // Définir le type Idea (les champs doivent correspondre à ta table "ideas")
 interface Idea {
