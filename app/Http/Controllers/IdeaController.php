@@ -39,6 +39,14 @@ class IdeaController extends Controller
             'user_id' => Auth::id(),
         ]);
         
+        if($request->has('tag')&& is_array($request->tag)){
+            foreach($request->tag as $tagName){
+                Tags::create([
+                    'name'=>trim($tagName),
+                    'idea_id'=>$idea->id,
+                ]);
+            }
+        }
         return redirect()->route('dashboard')->with('success', 'Idée créée avec succès');
     }
 

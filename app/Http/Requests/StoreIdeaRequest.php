@@ -24,6 +24,8 @@ class StoreIdeaRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'description' => 'required|string|min:10',
+            'tags' => 'nullable|array',
+             'tags.*' => 'string|max:50', // chaque élément du tableau doit être une string
         ];
     }
 }
