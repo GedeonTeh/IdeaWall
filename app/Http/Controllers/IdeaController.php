@@ -1,7 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Api;
-
+namespace App\Http\Controllers;
+use Inertia\Inertia;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreIdeaRequest;
 use App\Http\Requests\UpdateIdeaRequest;
@@ -11,76 +11,30 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class IdeasController extends Controller
+class IdeaController extends Controller
 {
-    public function index(Request $request): JsonResponse
+   
+    public function index()
     {
-        $query = Idea::with(['user:id,name', 'tags:id,name,idea_id'])
-            ->withCount('votes');
+          $ideas = Idea::with('user')->latest()->get(); // récupérer toutes les idées avec leur auteur
 
-        // Recherche
-        if ($search = $request->query('search')) {
-            $query->search($search);
-        }
-
-        // Filtrage par tags
-        if ($tags = $request->query('tags')) {
-            $tagsArray = is_array($tags) ? $tags : explode(',', $tags);
-            $query->whereHas('tags', function ($q) use ($tagsArray) {
-                $q->whereIn('name', $tagsArray);
-            });
-        }
-
-        // Tri
-        $sortBy = $request->query('sort', 'votes');
-        switch ($sortBy) {
-            case 'recent':
-                $query->orderBy('created_at', 'desc');
-                break;
-            case 'votes':
-            default:
-                $query->orderBy('votes_count', 'desc')
-                      ->orderBy('created_at', 'desc');
-                break;
-        }
-
-      
-        $ideas = $query->paginate(12);
-
-        if ($user = Auth::user()) {
-            $ideas->getCollection()->each(function ($idea) use ($user) {
-                $idea->user_has_voted = $user->hasVotedFor($idea);
-            });
-        }
-
-        return response()->json($ideas);
+          return Inertia::render('Dashboard', [
+                'ideas' => $ideas,
+            ]);
     }
 
-    public function store(StoreIdeaRequest $request): JsonResponse
+    public function store(StoreIdeaRequest $request)
     {
+    
         $idea = Idea::create([
             'title' => $request->title,
             'description' => $request->description,
             'user_id' => Auth::id(),
         ]);
-
-        if ($request->has('tags') && is_array($request->tags)) {
-            foreach ($request->tags as $tagName) {
-                $tag = Tag::findOrCreateByName(trim($tagName), $idea->id);
-                $tag->incrementUsage();
-            }
-        }
-
-
-        $idea->load(['user:id,name', 'tags:id,name,idea_id']);
-        $idea->loadCount('votes');
-        $idea->user_has_voted = false;
-
-        return response()->json([
-            'message' => 'Idée créée avec succès',
-            'data' => $idea
-        ], 201);
+        
+        return redirect()->route('dashboard')->with('success', 'Idée créée avec succès');
     }
+
 
 
     public function show(Idea $idea): JsonResponse
@@ -96,6 +50,11 @@ class IdeasController extends Controller
     }
 
 
+    public function edit($id)
+    {
+        $Idea=Idea::findOrFail($id);
+        return view('edit',compact('Idea'));
+    }
 
     public function update(UpdateIdeaRequest $request, Idea $idea): JsonResponse
     {
