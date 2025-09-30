@@ -15,8 +15,11 @@ class IdeaController extends Controller
 {
    
     public function welcome(){
-        return Inertia::render('after_connexion');
+          $ideas = Idea::with('user')->latest()->get(); // récupérer toutes les idées avec leur auteur
 
+          return Inertia::render('after_connexion', [
+                'ideas' => $ideas,
+            ]);
     }
     public function index()
     {

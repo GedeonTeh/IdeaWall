@@ -1,7 +1,8 @@
 <template>
     <div class="container mx-auto mt-5">
 
-        <div class="flex flex-row justify-between items-center bg-gradient-to-r from-blue-500 to-indigo-600 p-4 rounded-2xl ">
+        <div
+            class="flex flex-row justify-between items-center bg-gradient-to-r from-blue-500 to-indigo-600 p-4 rounded-2xl ">
 
             <div class="flex flex-row items-center gap-3">
                 <img class="w-16 h-16" src="idee (1).png" alt="Logo">
@@ -39,10 +40,9 @@
             </div>
 
 
-            <Link href=""
-                class="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500">
+            <Link href="" class="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500">
             <img class="size-6" src="icons8-add-32.png" alt="">
-            <span>Créer une idée</span>
+            <span>Poster une idée</span>
             </Link>
         </div>
 
@@ -63,13 +63,33 @@
             </div>
         </div>
     </div>
-    <div>
-        <slot></slot>
+    <div class="bg-white">
+        <Create />
+        <div v-if="props.ideas.length > 0" class="grid gap-4">
+            <Heading v-for="idea in props.ideas" :key="idea.id" :idea="idea" />
+        </div>
+        <p v-else class="text-gray-500">Pas du de publications pour l'instant</p>
     </div>
 </template>
 
 <script setup lang="ts">
 
 import { Link } from '@inertiajs/vue3'
-
+import Heading from './Heading.vue';
+import Create from './Create.vue';
+// Définir le type Idea (les champs doivent correspondre à ta table "ideas")
+interface Idea {
+  id: number
+  title: string
+  description: string
+  user?: {
+    id: number
+    name: string
+  }
+  created_at: string
+}
+// Props envoyées depuis ton contrôleur Laravel
+const props = defineProps<{
+  ideas: Idea[]
+}>()
 </script>
