@@ -1,42 +1,103 @@
 <script setup lang="ts">
-import {ref} from 'vue';
-interface Props {
-    title: string;
-    description?: string;
-    votes?: number;
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+
+interface Idea {
+  id: number
+  title: string
+  description: string
+  votes_count: number
+  user_has_voted?: boolean
+  user?: {
+    id: number
+    name: string
+  }
+  created_at: string
 }
 
-const props = defineProps<Props>();
+const props = defineProps<{ idea: Idea }>()
 
-const hasVoted = ref(false);
-const voteCount = ref(props.votes ?? 0);
+const votesCount = ref(props.idea.votes_count)
+const hasVoted = ref(!!props.idea.user_has_voted)
+const voting = ref(false)
+
+const formatDate = (date: string) => {
+  const createdDate = new Date(date)
+  return createdDate.toLocaleDateString('fr-FR', { 
+    day: 'numeric', 
+    month: 'long', 
+    year: 'numeric' 
+  })
+}
+
+const getInitials = (name?: string) => {
+  if (!name) return 'A'
+  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+}
+
+const toggleVote = async () => {
+  if (voting.value) return
+  voting.value = true
+  try {
+    const res = await axios.post(`/ideas/${props.idea.id}/vote-toggle`)
+    votesCount.value = res.data.data.votes_count
+    hasVoted.value = res.data.data.user_has_voted
+  } catch (err) {
+    console.error(err)
+  } finally {
+    voting.value = false
+  }
+}
+
+onMounted(() => {
+  window.Echo.channel('ideas')
+    .listen('IdeaVoted', (e: any) => {
+      if (e.idea.id === props.idea.id) {
+        votesCount.value = e.idea.votes_count
+      }
+    })
+})
 </script>
 
 <template>
-    <div class="">
-        <div class="mb-8 space-y-0.5 bg-white text-black p-2 rounded-xl ">
-            <h2 class="text-xl font-semibold tracking-tight text-black">{{ title }}</h2>
-            <p v-if="description" class="text-sm  text-black">
-                {{ description }}
-            </p>
-             <div class="mt-4 flex items-center space-x-3">
-      <!-- Bouton voter -->
-      <button
-        @click=""
-        :class="[
-          'px-3 py-1 rounded-lg font-medium transition',
-          hasVoted ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        ]"
+  <article 
+    class="bg-blue-50 border border-gray-100 rounded-lg p-6 hover:shadow-lg hover:border-blue-400 cursor-pointer mt-10 ml-29 mr-29"
+  >
+    <div class="flex items-start justify-between mb-4">
+      <div class="flex-1">
+        <h2 class="text-xl font-semibold text-gray-900 mb-2 leading-tight">
+          {{ props.idea.title }}
+        </h2>
+      </div>
+      <button 
+        class="px-4 py-2 rounded-lg text-white font-semibold"
+        :class="hasVoted ? 'bg-green-600' : 'bg-gray-400'"
+        @click="toggleVote"
+        :disabled="voting"
       >
-        {{ hasVoted ? 'Je retire mon vote' : 'Je vote' }}
+        {{ hasVoted ? 'Voté' : 'Voter' }} ({{ votesCount }})
       </button>
-
-      <!-- Nombre de votes -->
-      <span class="text-sm text-gray-700">{{ voteCount }} votes</span>
-    </div>
+    </div> 
+    <p class="text-gray-600 leading-relaxed mb-6">
+      {{ props.idea.description }}
+    </p>
+    <div class="flex items-center justify-between pt-4 border-t border-sky-600">
+      <div class="flex items-center gap-3">
+        <div 
+          class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-medium text-white"
+          :class="props.idea.user ? 'bg-green-600' : 'bg-gray-400'"
+        >
+          {{ getInitials(props.idea.user?.name) }}
         </div>
+        <div class="flex flex-col">
+          <span class="text-sm font-medium text-gray-900">
+            {{ props.idea.user?.name || 'Anonyme' }}
+          </span>
+          <span class="text-xs text-gray-500">
+            {{ formatDate(props.idea.created_at) }}
+          </span>
+        </div>
+      </div>
     </div>
+  </article>
 </template>
-<style>
-
-</style>

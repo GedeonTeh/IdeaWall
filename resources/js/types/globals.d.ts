@@ -1,4 +1,5 @@
 import { AppPageProps } from '@/types/index';
+import Pusher from 'pusher-js';
 
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
@@ -23,4 +24,12 @@ declare module 'vue' {
         $page: Page;
         $headManager: ReturnType<typeof createHeadManager>;
     }
+}
+
+
+declare global {
+  interface Window {
+    Pusher: typeof Pusher;
+    Echo: any;
+  }
 }
