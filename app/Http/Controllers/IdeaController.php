@@ -7,6 +7,7 @@ use App\Http\Requests\StoreIdeaRequest;
 use App\Http\Requests\UpdateIdeaRequest;
 use App\Models\Idea;
 use App\Models\Tag;
+use App\Events\IdeaCreated;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,43 +15,65 @@ use Illuminate\Support\Facades\Auth;
 class IdeaController extends Controller
 {
    
-     public function welcome(){
-          $ideas = Idea::with('user')->latest()->get(); // récupérer toutes les idées avec leur auteur
+    public function welcome(){
+        $userId = Auth::id();
+        
+        $ideas = Idea::with(['user', 'votes'])
+            ->withCount('votes')
+            ->latest()
+            ->get()
+            ->map(function ($idea) use ($userId) {
+                $idea->user_has_voted = $userId ? $idea->votes->contains('user_id', $userId) : false;
+                return $idea;
+            });
 
-          return Inertia::render('after_connexion', [
-                'ideas' => $ideas,
-            ]);
+        return Inertia::render('after_connexion', [
+            'ideas' => $ideas,
+        ]);
     }
+    
     public function index()
     {
-          $ideas = Idea::with('user')->latest()->get(); // récupérer toutes les idées avec leur auteur
+        $userId = Auth::id();
+        
+        $ideas = Idea::with(['user', 'votes'])
+            ->withCount('votes')
+            ->latest()
+            ->get()
+            ->map(function ($idea) use ($userId) {
+                $idea->user_has_voted = $userId ? $idea->votes->contains('user_id', $userId) : false;
+                return $idea;
+            });
 
-          return Inertia::render('Dashboard', [
-                'ideas' => $ideas,
-            ]);
+        return Inertia::render('Dashboard', [
+            'ideas' => $ideas,
+        ]);
     }
 
     public function store(StoreIdeaRequest $request)
     {
-    
+        // Création de l'idée
         $idea = Idea::create([
             'title' => $request->title,
             'description' => $request->description,
             'user_id' => Auth::id(),
         ]);
-        
-        if($request->has('tag')&& is_array($request->tag)){
-            foreach($request->tag as $tagName){
-                Tags::create([
-                    'name'=>trim($tagName),
-                    'idea_id'=>$idea->id,
+
+        // Ajout des tags si présents
+        if ($request->has('tag') && is_array($request->tag)) {
+            foreach ($request->tag as $tagName) {
+                Tag::create([
+                    'name' => trim($tagName),
+                    'idea_id' => $idea->id,
                 ]);
             }
         }
+
+        // Diffusion en temps réel
+        event(new IdeaCreated($idea));
+
         return redirect()->route('dashboard')->with('success', 'Idée créée avec succès');
     }
-
-
 
     public function show(Idea $idea): JsonResponse
     {
@@ -64,11 +87,10 @@ class IdeaController extends Controller
         return response()->json(['data' => $idea]);
     }
 
-
     public function edit($id)
     {
-        $Idea=Idea::findOrFail($id);
-        return view('edit',compact('Idea'));
+        $Idea = Idea::findOrFail($id);
+        return view('edit', compact('Idea'));
     }
 
     public function update(UpdateIdeaRequest $request, Idea $idea): JsonResponse
@@ -77,17 +99,14 @@ class IdeaController extends Controller
 
         $idea->update($request->validated());
 
-        // Mise à jour des tags si fournis (one-to-many)
+        // Mise à jour des tags si fournis
         if ($request->has('tags') && is_array($request->tags)) {
-            // Décrémenter l'usage des anciens tags
             foreach ($idea->tags as $oldTag) {
                 $oldTag->decrementUsage();
             }
 
-            // Supprimer les anciens tags
             $idea->tags()->delete();
 
-            // Créer et associer les nouveaux tags
             foreach ($request->tags as $tagName) {
                 $tag = Tag::findOrCreateByName(trim($tagName), $idea->id);
                 $tag->incrementUsage();
@@ -103,13 +122,10 @@ class IdeaController extends Controller
         ]);
     }
 
-    
-
     public function destroy(Idea $idea): JsonResponse
     {
         $this->authorize('delete', $idea);
 
-        // Décrémenter l'usage des tags et supprimer
         foreach ($idea->tags as $tag) {
             $tag->decrementUsage();
         }

@@ -46,4 +46,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function votes()
+{
+    return $this->hasMany(Vote::class);
+}
+
+public function hasVotedFor(Idea $idea): bool
+{
+    return $this->votes()->where('idea_id', $idea->id)->exists();
+}
+
 }

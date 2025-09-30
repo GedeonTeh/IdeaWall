@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
 
 interface Idea {
   id: number
   title: string
   description: string
+  votes_count: number
+  user_has_voted?: boolean
   user?: {
     id: number
     name: string
@@ -12,9 +15,11 @@ interface Idea {
   created_at: string
 }
 
-const props = defineProps<{
-  idea: Idea
-}>()
+const props = defineProps<{ idea: Idea }>()
+
+const votesCount = ref(props.idea.votes_count)
+const hasVoted = ref(!!props.idea.user_has_voted)
+const voting = ref(false)
 
 const formatDate = (date: string) => {
   const createdDate = new Date(date)
@@ -29,6 +34,29 @@ const getInitials = (name?: string) => {
   if (!name) return 'A'
   return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
 }
+
+const toggleVote = async () => {
+  if (voting.value) return
+  voting.value = true
+  try {
+    const res = await axios.post(`/ideas/${props.idea.id}/vote-toggle`)
+    votesCount.value = res.data.data.votes_count
+    hasVoted.value = res.data.data.user_has_voted
+  } catch (err) {
+    console.error(err)
+  } finally {
+    voting.value = false
+  }
+}
+
+onMounted(() => {
+  window.Echo.channel('ideas')
+    .listen('IdeaVoted', (e: any) => {
+      if (e.idea.id === props.idea.id) {
+        votesCount.value = e.idea.votes_count
+      }
+    })
+})
 </script>
 
 <template>
@@ -41,6 +69,14 @@ const getInitials = (name?: string) => {
           {{ props.idea.title }}
         </h2>
       </div>
+      <button 
+        class="px-4 py-2 rounded-lg text-white font-semibold"
+        :class="hasVoted ? 'bg-green-600' : 'bg-gray-400'"
+        @click="toggleVote"
+        :disabled="voting"
+      >
+        {{ hasVoted ? 'Voté' : 'Voter' }} ({{ votesCount }})
+      </button>
     </div> 
     <p class="text-gray-600 leading-relaxed mb-6">
       {{ props.idea.description }}
