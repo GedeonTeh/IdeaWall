@@ -1,3 +1,4 @@
+
 <template>
     <div class="container mx-auto mt-5">
 
@@ -10,7 +11,6 @@
                     <p class="text-blue-100 ">L'univers de l'innovation collaborative</p>
                 </div>
             </div>
-
 
             <div class="flex flex-row gap-4">
                 <div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 text-white shadow">
