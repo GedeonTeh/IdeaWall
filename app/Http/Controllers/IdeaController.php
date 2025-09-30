@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Auth;
 class IdeaController extends Controller
 {
    
+    public function welcome(){
+        return Inertia::render('after_connexion');
+
+    }
     public function index()
     {
           $ideas = Idea::with('user')->latest()->get(); // récupérer toutes les idées avec leur auteur

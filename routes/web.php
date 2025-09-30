@@ -9,10 +9,11 @@ Route::get('/', function () {
 
 
 
-Route::get('dashboard', [IdeaController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::get('/one_idea', [IdeaController::class, 'index']);
+    
 
+Route::get('/good_coming',[IdeaController::class, 'welcome'])->middleware(['auth', 'verified'])
+    ->name('dashboard');;
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/ideas', [IdeaController::class, 'store'])->name('ideas.store');
