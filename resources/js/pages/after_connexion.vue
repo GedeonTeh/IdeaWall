@@ -40,7 +40,7 @@
             </div>
 
 
-            <Link href="" class="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500">
+            <Link href="" class="flex items-center gap-2 px-4 py-2 rounded-full bg-green-400">
             <img class="size-6" src="icons8-add-32.png" alt="">
             <span>Poster une idée</span>
             </Link>
@@ -64,32 +64,53 @@
         </div>
     </div>
     <div class="bg-white">
-        <Create />
+        <!-- Modal Create -->
+        <Create :isOpen="isCreateModalOpen" @close="isCreateModalOpen = false" />
+        
         <div v-if="props.ideas.length > 0" class="grid gap-4">
             <Heading v-for="idea in props.ideas" :key="idea.id" :idea="idea" />
         </div>
         <p v-else class="text-gray-500">Pas du de publications pour l'instant</p>
     </div>
 </template>
-
 <script setup lang="ts">
-
+import { ref, onMounted, onUnmounted } from 'vue'
 import { Link } from '@inertiajs/vue3'
-import Heading from './Heading.vue';
-import Create from './Create.vue';
-// Définir le type Idea (les champs doivent correspondre à ta table "ideas")
+import Heading from './Heading.vue'
+import Create from './Create.vue'
+
 interface Idea {
-  id: number
-  title: string
-  description: string
-  user?: {
     id: number
-    name: string
-  }
-  created_at: string
+    title: string
+    description: string
+    votes_count: number
+    user?: {
+        id: number
+        name: string
+    }
+    created_at: string
 }
 // Props envoyées depuis ton contrôleur Laravel
 const props = defineProps<{
     ideas: Idea[]
 }>()
+
+const isUserMenuOpen = ref(false)
+const isCreateModalOpen = ref(false)
+const userMenuRef = ref<HTMLElement | null>(null)
+
+// Fermer le menu quand on clique à l'extérieur
+const handleClickOutside = (event: MouseEvent) => {
+    if (userMenuRef.value && !userMenuRef.value.contains(event.target as Node)) {
+        isUserMenuOpen.value = false
+    }
+}
+
+onMounted(() => {
+    document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside)
+})
 </script>
