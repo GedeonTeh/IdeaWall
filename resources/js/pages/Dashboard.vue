@@ -27,7 +27,5 @@ const props = defineProps<{
             <Heading v-for="idea in props.ideas" :key="idea.id" :idea="idea"/>
         </div>
         <p v-else class="text-gray-500">Pas du de publications pour l'instant</p>
-    </div>
-        
-    
+    </div>            
 </template>
