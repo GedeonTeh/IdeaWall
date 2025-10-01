@@ -5,6 +5,7 @@ use App\Models\Vote;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -13,7 +14,7 @@ Route::get('/', function () {
 Route::get('/one_idea', [IdeaController::class, 'index']);
 
 Route::get('/good_coming',[IdeaController::class, 'welcome'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified'  ])
     ->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
@@ -51,6 +52,11 @@ Route::middleware(['auth'])->group(function () {
             ]
         ]);
     })->name('ideas.vote-toggle');
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])
+        ->name('admin.dashboard');
 });
 
 require __DIR__.'/settings.php';
