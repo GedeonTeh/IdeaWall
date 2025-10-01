@@ -130,7 +130,6 @@ interface Idea {
     id: number
     title: string
     description: string
-    count_votes:number
     user?: {
         id: number
         name: string
