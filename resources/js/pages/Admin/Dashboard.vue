@@ -347,15 +347,13 @@ const formatDate = (date: string) => {
 }
 const getRankClass = (index: number) => {
     if (index === 0 || index === 1 || index === 2) return 'border-green-300 bg-green-50'
-    // if (index === 1) return 'border-gray-400 bg-gray-50'
-    // if (index === 2) return 'border-orange-400 bg-orange-50'
+  
     return 'border-gray-200'
 }
 
 const getRankBadgeClass = (index: number) => {
     if (index === 0 || index === 1 || index === 2) return 'bg-green-400 text-white'
-    // if (index === 1) return 'bg-gray-400 text-white'
-    // if (index === 2) return 'bg-orange-400 text-white'
+   
     return 'bg-gray-200 text-gray-600'
 }
 
