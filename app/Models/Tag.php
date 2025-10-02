@@ -22,9 +22,9 @@ class Tag extends Model
     ];
 
     
-    public function idea()
+    public function ideas()
     {
-        return $this->belongsTo(Idea::class);
+        return $this->belongsToMany(Idea::class , 'idea_tag','tag_id','idea_id');
     }
 
     

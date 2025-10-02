@@ -37,11 +37,15 @@ class Idea extends Model
     }
 
     
+    // public function tags()
+    // {
+    //     return $this->hasMany(Tag::class);
+    // }
+
     public function tags()
     {
-        return $this->hasMany(Tag::class);
+        return $this->belongsToMany(Tag::class,'idea_tag','idea_id','tag_id');
     }
-
    
     public function hasVotedBy(User $user): bool
     {

@@ -85,12 +85,12 @@ onMounted(() => {
       <div class="flex items-center gap-3">
         <div 
           class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-medium text-white"
-          :class="props.idea.user ? 'bg-green-600' : 'bg-gray-400'"
+          :class="props.idea.user ? 'bg-green-600' : 'bg-green-400'"
         >
           {{ getInitials(props.idea.user?.name) }}
         </div>
         <div class="flex flex-col">
-          <span class="text-sm font-medium text-gray-900">
+          <span class="text-sm font-medium text-gray-900"> 
             {{ props.idea.user?.name || 'Anonyme' }}
           </span>
           <span class="text-xs text-gray-500">

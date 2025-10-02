@@ -14,47 +14,75 @@ use Illuminate\Support\Facades\Auth;
 
 class IdeaController extends Controller
 {
-   
     public function welcome(Request $request){
-        $userId = Auth::id();
-        
-        $query = Idea::with(['user', 'votes','tags'])
-            ->withCount('votes')
-            ->latest();
+    $userId = Auth::id();
 
-        if($request->filled('search')){
-            $search = $request->input('search');
-            $query->where(function($q) use ($search){
-                $q->where('title','LIKE', "%{$search}%")->orWhereHas('tags',function($q2) use ($search){
-                    $q2->where('name','LIKE',"%{$search}");
-                });
-            });
-        }
+    $query = Idea::with(['user:id,name', 'tags', 'votes'])
+        ->withCount('votes')
+        ->latest(); // tri par created_at DESC
 
-        $ideas = $query->with('tags')->get()->map(function ($idea) use ($userId) {
-                $idea->user_has_voted = $userId ? $idea->votes->contains('user_id', $userId) : false;
-                return $idea;
-            });
-
-        $idea2 = Idea::query()
-            ->when($request->input('search'), function ($query, $search) {
-                $query->where(function($q) use ($search){
-                    $q->where('title','LIKE', "%{$search}%")
-                        ->orWhereRelation('tags', 'name','LIKE',"%{$search}%");
-                });
-            })
-            ->withCount('votes')
-            ->get()
-            ->each(fn ($idea) => $idea->append('user_has_voted'));
-
-
-            // return response()->json(['idea' => $ideas, 'idea2' => $idea2]);
-            
-        return Inertia::render('after_connexion', [
-            'ideas' => $ideas,
-            'filters' => $request->only('search')
-        ]);
+    if($request->filled('search')){
+        $search = $request->input('search');
+        $query->where(function($q) use ($search){
+            $q->where('title','LIKE', "%{$search}%")
+              ->orWhereHas('tags', function($q2) use ($search){
+                  $q2->where('name','LIKE', "%{$search}%");
+              });
+        });
     }
+
+    // Récupération et ajout de l'attribut user_has_voted
+    $ideas = $query->get()->map(function ($idea) use ($userId) {
+        $idea->user_has_voted = $userId ? $idea->votes->contains('user_id', $userId) : false;
+        return $idea;
+    });
+
+    return Inertia::render('after_connexion', [
+        'ideas' => $ideas,
+        'filters' => $request->only('search')
+    ]);
+}
+   
+    // public function welcome(Request $request){
+    //     $userId = Auth::id();
+        
+    //     $query = Idea::with(['user', 'votes','tags'])
+    //         ->withCount('votes')
+    //         ->latest();
+
+    //     if($request->filled('search')){
+    //         $search = $request->input('search');
+    //         $query->where(function($q) use ($search){
+    //             $q->where('title','LIKE', "%{$search}%")->orWhereHas('tags',function($q2) use ($search){
+    //                 $q2->where('name','LIKE',"%{$search}%");
+    //             });
+    //         });
+    //     }
+
+    //     $ideas = $query->with('tags')->get()->map(function ($idea) use ($userId) {
+    //             $idea->user_has_voted = $userId ? $idea->votes->contains('user_id', $userId) : false;
+    //             return $idea;
+    //         });
+
+    //     $idea2 = Idea::query()
+    //         ->when($request->input('search'), function ($query, $search) {
+    //             $query->where(function($q) use ($search){
+    //                 $q->where('title','LIKE', "%{$search}%")
+    //                     ->orWhereRelation('tags', 'name','LIKE',"%{$search}%");
+    //             });
+    //         })
+    //         ->withCount('votes')
+    //         ->get()
+    //         ->each(fn ($idea) => $idea->append('user_has_voted'));
+
+
+    //         // return response()->json(['idea' => $ideas, 'idea2' => $idea2]);
+            
+    //     return Inertia::render('after_connexion', [
+    //         'ideas' => $ideas,
+    //         'filters' => $request->only('search')
+    //     ]);
+    // }
     
     // public function index()
     // {
@@ -84,13 +112,13 @@ class IdeaController extends Controller
         ]);
 
         // Ajout des tags si présents
-        if ($request->has('tag') && is_array($request->tag)) {
-            foreach ($request->tag as $tagName) {
-                Tag::create([
-                    'name' => trim($tagName),
-                    'idea_id' => $idea->id,
-                ]);
+        if ($request->has('tags')) {
+            $tagIds = [];
+            foreach ($request->tags as $tagName) {
+                $tag = Tag::firstOrCreate(['name' => trim($tagName)]);
+                $tagIds[] = $tag->id;
             }
+            $idea->tags()->sync($tagIds);
         }
 
         // Diffusion en temps réel
@@ -117,34 +145,34 @@ class IdeaController extends Controller
         return view('edit', compact('Idea'));
     }
 
-    public function update(UpdateIdeaRequest $request, Idea $idea): JsonResponse
-    {
-        $this->authorize('update', $idea);
+    // public function update(UpdateIdeaRequest $request, Idea $idea): JsonResponse
+    // {
+    //     $this->authorize('update', $idea);
 
-        $idea->update($request->validated());
+    //     $idea->update($request->validated());
 
-        // Mise à jour des tags si fournis
-        if ($request->has('tags') && is_array($request->tags)) {
-            foreach ($idea->tags as $oldTag) {
-                $oldTag->decrementUsage();
-            }
+    //     // Mise à jour des tags si fournis
+    //     if ($request->has('tags') && is_array($request->tags)) {
+    //         foreach ($idea->tags as $oldTag) {
+    //             $oldTag->decrementUsage();
+    //         }
 
-            $idea->tags()->delete();
+    //         $idea->tags()->delete();
 
-            foreach ($request->tags as $tagName) {
-                $tag = Tag::findOrCreateByName(trim($tagName), $idea->id);
-                $tag->incrementUsage();
-            }
-        }
+    //         foreach ($request->tags as $tagName) {
+    //             $tag = Tag::findOrCreateByName(trim($tagName), $idea->id);
+    //             $tag->incrementUsage();
+    //         }
+    //     }
 
-        $idea->load(['user:id,name', 'tags:id,name,idea_id']);
-        $idea->loadCount('votes');
+    //     $idea->load(['user:id,name', 'tags:id,name,idea_id']);
+    //     $idea->loadCount('votes');
 
-        return response()->json([
-            'message' => 'Idée mise à jour avec succès',
-            'data' => $idea
-        ]);
-    }
+    //     return response()->json([
+    //         'message' => 'Idée mise à jour avec succès',
+    //         'data' => $idea
+    //     ]);
+    // }
 
     public function destroy(Idea $idea): JsonResponse
     {
