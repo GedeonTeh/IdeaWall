@@ -37,10 +37,10 @@
                                     <p class="text-sm font-medium text-gray-900">Administrateur</p>
                                     <p class="text-xs text-gray-500 mt-1">admin@ideawall.com</p>
                                 </div>
-                                <a href="/logout"
-                                    class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
-                                    Se déconnecter
-                                </a>
+                                <Link href="/logout" method="post" as="button"
+                                    class="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                Se déconnecter
+                                </Link>
                             </div>
                         </Transition>
                     </div>
@@ -258,37 +258,37 @@
                     </div>
                 </div>
             </div>
-    </main>
+        </main>
 
-    <!-- Delete Confirmation Modal -->
-    <Transition name="modal">
-        <div v-if="showDeleteModal"
-            class="fixed inset-0 bg-blue-200 bg-opacity-50 flex items-center justify-center z-50 px-4">
-            <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
-                <h3 class="text-xl font-bold text-gray-200 mb-4">Confirmer la suppression</h3>
-                <p class="text-gray-600 mb-6">
-                    Êtes-vous sûr de vouloir supprimer l'idée "<strong>{{ ideaToDelete?.title }}</strong>" ? Cette
-                    action est irréversible.
-                </p>
-                <div class="flex gap-3 justify-end">
-                    <button @click="showDeleteModal = false"
-                        class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
-                        Annuler
-                    </button>
-                    <button @click="deleteIdea"
-                        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                        Supprimer
-                    </button>
+        <!-- Delete Confirmation Modal -->
+        <Transition name="modal">
+            <div v-if="showDeleteModal"
+                class="fixed inset-0 bg-blue-200 bg-opacity-50 flex items-center justify-center z-50 px-4">
+                <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
+                    <h3 class="text-xl font-bold text-gray-200 mb-4">Confirmer la suppression</h3>
+                    <p class="text-gray-600 mb-6">
+                        Êtes-vous sûr de vouloir supprimer l'idée "<strong>{{ ideaToDelete?.title }}</strong>" ? Cette
+                        action est irréversible.
+                    </p>
+                    <div class="flex gap-3 justify-end">
+                        <button @click="showDeleteModal = false"
+                            class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+                            Annuler
+                        </button>
+                        <button @click="deleteIdea"
+                            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                            Supprimer
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </Transition>
+        </Transition>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-
+import { router, Link } from '@inertiajs/vue3'
 interface Idea {
     id: number
     title: string
@@ -347,13 +347,13 @@ const formatDate = (date: string) => {
 }
 const getRankClass = (index: number) => {
     if (index === 0 || index === 1 || index === 2) return 'border-green-300 bg-green-50'
-  
+
     return 'border-gray-200'
 }
 
 const getRankBadgeClass = (index: number) => {
     if (index === 0 || index === 1 || index === 2) return 'bg-green-400 text-white'
-   
+
     return 'bg-gray-200 text-gray-600'
 }
 

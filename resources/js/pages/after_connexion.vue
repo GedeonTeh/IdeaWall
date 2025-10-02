@@ -56,7 +56,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                     </svg>
-                    <span class="hidden sm:inline">Poster une idée</span>
+                    <span class="hidden sm:inline">Poster une idée {{ isCreateModalOpen }}</span>
                 </button>
             </div>
             <div class="relative" ref="userMenuRef">
@@ -95,9 +95,12 @@
             <h1 class="text-4xl font-extrabold text-gray-800 mb-4">Transformez vos idées en réalité</h1>
             <p class="text-gray-600 mb-6">Rejoignez une communauté d'innovateurs et collaborez pour créer l'avenir</p>
 
-
+            <!-- Section de recherche -->
             <div class="relative max-w-xl mx-auto">
-                <input type="text" placeholder="Rechercher une idée brillante..."
+                <input 
+                v-model="search"
+                @input="doSearch"
+                type="text" placeholder="Rechercher une idée brillante..."
                     class="w-full px-5 py-3 pl-12 rounded-full border border-gray-300  ">
                 <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none"
                     stroke="currentColor" viewBox="0 0 24 24">
@@ -112,17 +115,26 @@
     <div class="bg-white">
         <!-- Modal Create -->
         <Create :isOpen="isCreateModalOpen" @close="isCreateModalOpen = false" />
-        
-        <div v-if="props.ideas.length > 0" class="grid gap-4">
-            <Heading v-for="idea in props.ideas" :key="idea.id" :idea="idea" />
+        <div v-if="search">
+            <p>Resultats pour "{{ search }}" :</p>
+            <div v-if="props.ideas.length > 0" class="grid gap-4">
+                <Heading v-for="idea in props.ideas" :key="idea.id" :idea="idea" />
+            </div>
+            <p v-else>Aucune idée ne correspond à votre recherche.</p>
         </div>
-        <p v-else class="text-gray-500">Pas du de publications pour l'instant</p>
+        
+        <div v-else>
+            <div v-if="props.ideas.length > 0" class="grid gap-4">
+                <Heading v-for="idea in props.ideas" :key="idea.id" :idea="idea" />
+            </div>
+            <p v-else class="text-gray-500">Pas du de publications pour l'instant</p>
+        </div>    
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-import { Link } from '@inertiajs/vue3'
+import { ref, watch , onMounted, onUnmounted} from 'vue'
+import { router, Link } from '@inertiajs/vue3'
 import Heading from './Heading.vue'
 import Create from './Create.vue'
 
@@ -130,6 +142,7 @@ interface Idea {
     id: number
     title: string
     description: string
+    votes_count: number   
     user?: {
         id: number
         name: string
@@ -139,7 +152,10 @@ interface Idea {
 
 const props = defineProps<{
     ideas: Idea[]
+    filters:{search?:string}
 }>()
+
+const search = ref(props.filters?.search || '')
 
 const isUserMenuOpen = ref(false)
 const isCreateModalOpen = ref(false)
@@ -159,4 +175,18 @@ onMounted(() => {
 onUnmounted(() => {
     document.removeEventListener('click', handleClickOutside)
 })
+
+watch(
+    () => props.filters?.search,
+    (newVal)=>{
+        search.value = newVal || ''
+    }
+);
+
+function doSearch(){
+    router.get('/good_coming',{search: search.value},{
+        preserveState: true,
+        replace: true
+    })
+}
 </script>

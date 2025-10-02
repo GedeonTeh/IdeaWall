@@ -37,9 +37,9 @@ class Idea extends Model
     }
 
     
-    public function tags(): HasMany
+    public function tags()
     {
-        return $this->hasMany(Tag::class, 'idea_id');
+        return $this->hasMany(Tag::class);
     }
 
    
@@ -80,5 +80,10 @@ class Idea extends Model
             });
         }
         return $query;
+    }
+
+
+    public function getUserHasVotedAttribute(){
+        return auth()->id() && $this->votes()->whereUserId(auth()->id())->exists();
     }
 }

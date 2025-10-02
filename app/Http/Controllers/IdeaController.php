@@ -15,40 +15,64 @@ use Illuminate\Support\Facades\Auth;
 class IdeaController extends Controller
 {
    
-    public function welcome(){
+    public function welcome(Request $request){
         $userId = Auth::id();
         
-        $ideas = Idea::with(['user', 'votes'])
+        $query = Idea::with(['user', 'votes','tags'])
             ->withCount('votes')
-            ->latest()
-            ->get()
-            ->map(function ($idea) use ($userId) {
+            ->latest();
+
+        if($request->filled('search')){
+            $search = $request->input('search');
+            $query->where(function($q) use ($search){
+                $q->where('title','LIKE', "%{$search}%")->orWhereHas('tags',function($q2) use ($search){
+                    $q2->where('name','LIKE',"%{$search}");
+                });
+            });
+        }
+
+        $ideas = $query->with('tags')->get()->map(function ($idea) use ($userId) {
                 $idea->user_has_voted = $userId ? $idea->votes->contains('user_id', $userId) : false;
                 return $idea;
             });
 
+        $idea2 = Idea::query()
+            ->when($request->input('search'), function ($query, $search) {
+                $query->where(function($q) use ($search){
+                    $q->where('title','LIKE', "%{$search}%")
+                        ->orWhereRelation('tags', 'name','LIKE',"%{$search}%");
+                });
+            })
+            ->withCount('votes')
+            ->get()
+            ->each(fn ($idea) => $idea->append('user_has_voted'));
+
+
+            // return response()->json(['idea' => $ideas, 'idea2' => $idea2]);
+            
         return Inertia::render('after_connexion', [
             'ideas' => $ideas,
+            'filters' => $request->only('search')
         ]);
     }
     
-    public function index()
-    {
-        $userId = Auth::id();
+    // public function index()
+    // {
+    //     $userId = Auth::id();
         
-        $ideas = Idea::with(['user', 'votes'])
-            ->withCount('votes')
-            ->latest()
-            ->get()
-            ->map(function ($idea) use ($userId) {
-                $idea->user_has_voted = $userId ? $idea->votes->contains('user_id', $userId) : false;
-                return $idea;
-            });
+    //     $ideas = Idea::with(['user', 'votes'])
+    //         ->withCount('votes')
+    //         ->latest()
+    //         ->get()
+    //         ->map(function ($idea) use ($userId) {
+    //             $idea->user_has_voted = $userId ? $idea->votes->contains('user_id', $userId) : false;
+    //             return $idea;
+    //         });
 
-        return Inertia::render('Dashboard', [
-            'ideas' => $ideas,
-        ]);
-    }
+    //     return Inertia::render('Dashboard', [
+    //         'ideas' => $ideas,
+    //     ]);
+    // }
 
     public function store(StoreIdeaRequest $request)
     {
